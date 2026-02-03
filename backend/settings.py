@@ -150,5 +150,12 @@ CHANNEL_LAYERS = {
 # Redis for caching stock prices (optional)
 REDIS_URL = "redis://redis:6379/2"
 
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = 'static/'
+
+# Add this for collectstatic
+import os
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
  
