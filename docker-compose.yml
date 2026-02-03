@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py migrate &&
+             daphne backend.asgi:application -b 0.0.0.0 -p 8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  celery:
+    build: .
+    command: celery -A backend worker -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
