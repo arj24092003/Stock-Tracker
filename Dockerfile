@@ -10,7 +10,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
-    netcat \
+    netcat 
 RUN rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
@@ -19,6 +19,7 @@ RUN pip install -r requirements.txt
 
 
 COPY . .
+RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
 
