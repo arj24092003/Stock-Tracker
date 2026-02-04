@@ -14,9 +14,9 @@ services:
     command: >
       sh -c "python manage.py migrate &&
              python manage.py collectstatic --noinput &&
-             daphne backend.asgi:application -b 0.0.0.0 -p 8000"
-    ports:
-      - "8000:8000"
+             daphne -b 0.0.0.0 -p 8000 backend.asgi:application"
+    expose:
+      - "8000"
     volumes:
       - staticfiles:/app/staticfiles
     depends_on:
@@ -35,7 +35,9 @@ services:
 
   celery:
     build: .
-    command: celery -A backend worker -l info
+    command: >
+      sh -c "until nc -z redis 6379; do echo 'Waiting for Redis...'; sleep 1; done;
+             celery -A backend worker -l info"
     depends_on:
       - redis
       - web
